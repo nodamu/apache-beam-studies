@@ -8,13 +8,13 @@ def SplitRow(element):
 p = beam.Pipeline()
 
 # Input Pcollection
-
 input_collection = (
         p
         | "Read from file" >> beam.io.ReadFromText('structure_of_beam_apps/dept-data.txt')
         | "Split rows" >> beam.Map(SplitRow)
 )
 
+# Accounts dept pipeline branch
 accounts_count = (
         input_collection
         | "Get all Accounts dept person" >> beam.Filter(lambda record : record[3] == 'Accounts')
@@ -23,6 +23,7 @@ accounts_count = (
         | "Write results for accounts" >> beam.io.WriteToText('structure_of_beam_apps/data/Account')
 )
 
+# HR dept pipeline branch
 hr_count = (
     input_collection
     | "Get all HR dept persons" >> beam.Filter(lambda record : record[3] == 'HR')
@@ -31,4 +32,5 @@ hr_count = (
     | "Write results for HR" >> beam.io.WriteToText('structure_of_beam_apps/data/HR')
 )
 
+# Run pipeline
 p.run()
